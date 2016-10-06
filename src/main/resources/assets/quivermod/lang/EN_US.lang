@@ -1,0 +1,43 @@
+<comment>English (en_US) Localization File</comment>
+<!--  Creative Mode Tabs  -->
+itemGroup.BARBows=Bows
+itemGroup.BARArrows=Arrows
+<!--  Blocks  -->
+tile.tileEntityTorch.name=Tile Entity Torch Block
+item.quiver.name=Quiver
+<!--  Bows  -->
+item.quiverBow.name=Bow
+item.RecurveBow.name=Recurve Bow
+item.Yumi.name=Yumi
+item.Longbow.name=Longbow
+item.quiverBowComposite.name=Composite Bow
+item.bowstring.name=Bowstring
+<!--  Arrows  -->
+item.arrow.name.plural=Arrows
+item.firearrow.name=Flaming Arrow
+item.firearrow.name.plural=Flaming Arrows
+item.impactarrow.name=Impact Explosive Arrow
+item.impactarrow.name.plural=Impact Explosive Arrows
+item.timedarrow.name=Fused Explosive Arrow
+item.timedarrow.name.plural=Fused Explosive Arrows
+item.enderarrow.name=Ender Arrow
+item.enderarrow.name.plural=Ender Arrows
+item.torcharrow.name=Torch Arrow
+item.torcharrow.name.plural=Torch Arrows
+item.drillarrow.name=Drill Arrow
+item.drillarrow.name.plural=Drill Arrows
+item.potionArrow.name=Potion Arrow
+item.potionArrow.name.plural=Potion Arrows
+item.bowstring.name=Bowstring
+<!--  Crafting Items  -->
+item.sinew.name=Sinew
+item.bottledrottenflesh.name=Bottled Rotten Flesh
+item.hideglue.name=Bottled Hide Glue
+<!--  Prefixes/Postfixes  -->
+quiverModBow.prefix.broken=Unstrung
+quiverModArrow.splitting.usePlural=false
+quiverModArrow.splitting.prefix.beforeNum/>
+quiverModArrow.splitting.prefix.afterNum=-Splitting
+quiverModArrow.splitting.postfix/>
+quiverModArrow.prefix.broken=Broken
+item.bowstring.suffix=Use to repair broken bows
