@@ -7,6 +7,7 @@ import java.util.List;
 import com.Jackiecrazi.BetterArcheryReborn.BAR;
 import com.Jackiecrazi.BetterArcheryReborn.helpful.ColorThing;
 import com.Jackiecrazi.BetterArcheryReborn.helpful.LittleBittah;
+import com.Jackiecrazi.BetterArcheryReborn.helpful.RepetitiveSnippets;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -266,12 +267,21 @@ public class Quiver extends Item {
 		QuiverInventory inv = new QuiverInventory(player.inventory, quiverIndex);
 		
 		ItemStack arrowStack = inv.getStackInSlot(arrowIndex);
+		if(arrowStack!=null){
 		arrowStack.stackSize--;
 		
-		if (arrowStack.stackSize <= 0)
+		if (arrowStack.stackSize <= 0){
 			arrowStack = null;
+			//RepetitiveSnippets.setSelectedArrowItem(player, RepetitiveSnippets.getSelectedArrowItem(player)+1);
+		}
 		
 		inv.setInventorySlotContents(arrowIndex, arrowStack);
+		}
+		/*else {
+			if(arrowIndex<4)
+			removeArrow(player,quiver,quiverIndex,arrowIndex+1);
+			else return;
+		}*/
 	}
 	
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)

@@ -20,7 +20,7 @@ public class ModCrafting {
 	public static void initCrafting(){
 		List recipes=CraftingManager.getInstance().getRecipeList();
 		GameRegistry.addRecipe(new ItemStack(ModItems.Bowstring), "n", "n", "n", 'n', Items.string);
-		GameRegistry.addRecipe(new ItemStack(ModItems.Longbow,1,OreDictionary.WILDCARD_VALUE), "a  ", "bc ", "a  ", 'b', Items.string, 'a', Items.stick, 'c', new ItemStack(Items.bow,1,OreDictionary.WILDCARD_VALUE));
+		//GameRegistry.addRecipe(new ItemStack(ModItems.Longbow,1,OreDictionary.WILDCARD_VALUE), "a  ", "bc ", "a  ", 'b', Items.string, 'a', Items.stick, 'c', new ItemStack(Items.bow,1,OreDictionary.WILDCARD_VALUE));
 		GameRegistry.addRecipe(new ItemStack(ModItems.Comp), new Object[]{
 			"ab ",
 			"acd",
@@ -32,7 +32,7 @@ public class ModCrafting {
 			'e',new ItemStack(ModItems.onemisc,1,1),
 			'f',new ItemStack(ModItems.misc,1,0)
 		});
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.Recurve,1,OreDictionary.WILDCARD_VALUE),new Object[]{new ItemStack(Items.bow,1,OreDictionary.WILDCARD_VALUE)});
+		//GameRegistry.addShapelessRecipe(new ItemStack(ModItems.Recurve,1,OreDictionary.WILDCARD_VALUE),new Object[]{new ItemStack(Items.bow,1,OreDictionary.WILDCARD_VALUE)});
 		GameRegistry.addRecipe(new ItemStack(ModItems.Yumi,1,OreDictionary.WILDCARD_VALUE), "abb", "acb", "ab ", 'b', Items.reeds, 'a', Items.string, 'c', Items.leather);
 		GameRegistry.addRecipe(new ItemStack(ModItems.FireArrow), "h","i",'h',new ItemStack(Items.coal,1,0),'i',new ItemStack(Items.arrow));
 		GameRegistry.addRecipe(new ItemStack(ModItems.FireArrow), "h","i",'h',new ItemStack(Items.coal,1,1),'i',new ItemStack(Items.arrow));
@@ -60,5 +60,7 @@ public class ModCrafting {
 				'b', new ItemStack(Items.potionitem));
         FurnaceRecipes.smelting().func_151394_a(new ItemStack(ModItems.onemisc,1,0), new ItemStack(ModItems.onemisc,1,1), 0.2F);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.misc,1,0), new Object[]{new ItemStack(Items.rotten_flesh)});
+		recipes.add(new RecipesLongbow());
+		recipes.add(new RecipesRecurveBow());
 	}
 }

@@ -1,5 +1,6 @@
 package com.Jackiecrazi.BetterArcheryReborn.Items;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -8,18 +9,13 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
@@ -30,6 +26,10 @@ import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
 import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.PotionArrow;
 import com.Jackiecrazi.BetterArcheryReborn.entities.EntityQuiverModArrowNew;
 import com.Jackiecrazi.BetterArcheryReborn.helpful.BowArrowIcons;
+import com.Jackiecrazi.BetterArcheryReborn.helpful.InventorySlot;
+import com.Jackiecrazi.BetterArcheryReborn.helpful.InventorySlots;
+import com.Jackiecrazi.BetterArcheryReborn.helpful.RepetitiveSnippets;
+import com.Jackiecrazi.BetterArcheryReborn.quivering.Quiver;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -95,7 +95,7 @@ public class QuiverBow extends ItemBow{
     }
 	public boolean isArrow(ItemStack i){
 		Item it = i.getItem();
-		return it==ModItems.DerpArrow||it==ModItems.FireArrow||it==Items.arrow||it==ModItems.PotArrow||(it==ModItems.DrillArrow&&i.getItemDamage()!=16)||it==ModItems.EnderArrow||it==ModItems.TimedArrow||it==ModItems.ImpactArrow||it==ModItems.TorchArrow;
+		return it==ModItems.DerpArrow||it==ModItems.FireArrow||it==Items.arrow||it==ModItems.PotArrow||(it==ModItems.DrillArrow&&i.getItemDamage()!=16)||it==ModItems.EnderArrow||it==ModItems.TimedArrow||it==ModItems.ImpactArrow||it==ModItems.TorchArrow||(it==ModItems.quiver&&Quiver.getArrowCount(i)>0);
 	}
 	public boolean hasArrow(EntityPlayer p){
 		for(ItemStack s: p.inventory.mainInventory){
@@ -106,7 +106,7 @@ public class QuiverBow extends ItemBow{
 		return false;
 	}
 	public String getArrow(EntityPlayer player){
-		String h=player.getEntityData().getString("usingArrow");
+		String h=player.getEntityData().getString("BARusingArrow");
 		return h;
 		//TODO stuff
 	}
@@ -117,7 +117,19 @@ public class QuiverBow extends ItemBow{
 	}
 	public ItemStack getArrowStackFromInv(EntityPlayer player){
 			for (ItemStack stack : player.inventory.mainInventory) {
-				if (stack != null && isArrow(stack)) {
+				if(stack!=null&&stack.getItem()==ModItems.quiver){
+					ArrayList<ItemStack> i=RepetitiveSnippets.getArrowTypesHeld(player);
+					ItemStack h=null;
+					try{
+						h=i.get(RepetitiveSnippets.getSelectedArrowItem(player));
+					}
+					catch(IndexOutOfBoundsException e){
+						return new ItemStack(ModItems.DerpArrow);
+					}
+					//TODO outofbounds because there is no arrow apparently
+					return h.getItem()==Items.arrow||h==null? new ItemStack(ModItems.DerpArrow):h;
+				}
+				else if (stack != null && isArrow(stack)) {
 					return stack;
 			}
 		}
@@ -134,12 +146,39 @@ public class QuiverBow extends ItemBow{
             return;
         }
         j = event.charge;
-
+        
+        InventorySlots arrowSlots = RepetitiveSnippets.getArrowSlot(p_77615_3_);
+        int quiverIndex = -1;
+        int arrowIndex = -1;
+        ItemStack quiverStack = null; 
+        ItemStack arrowStack = null;
+        Item arrow=null;
+        int reps=0;
+        int tops=1;
+        if (arrowSlots != null)
+        {
+        	InventorySlot quiverSlot = arrowSlots.get("quiver");
+        	quiverStack = quiverSlot.stack;
+        	quiverIndex = quiverSlot.index;
+        	
+        	InventorySlot arrowSlot = arrowSlots.get("arrow");
+        	arrowStack = arrowSlot.stack;
+        	arrowIndex = arrowSlot.index;
+        	if(arrowStack.getItem() instanceof PotionArrow){
+        		PotionArrow potarr=(PotionArrow)arrowStack.getItem();
+        		tops=potarr.getSplittingArrowCount(arrowStack.getItemDamage());
+        	}
+        	else{
+        		ItemQuiverModArrow norarr=(ItemQuiverModArrow)arrowStack.getItem();
+        		tops=norarr.getSplittingArrowCount(arrowStack.getItemDamage());
+        	}
+        }
+        
         boolean flag = p_77615_3_.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, p_77615_1_) > 0;
-        boolean hasArrow=hasArrow(p_77615_3_);//TODO moar arrows!
+        boolean hasArrow=hasArrow(p_77615_3_);
         if ((flag || hasArrow)&&j>0)
         {
-        	for(int reps=0;reps<this.getArrowStackFromInv(p_77615_3_).getItemDamage()+1;reps++){
+        	for(reps=0;reps<tops+1;reps++){
             float f = getUsePower(j);
 
             if ((double)f < 0.1D)
@@ -151,8 +190,8 @@ public class QuiverBow extends ItemBow{
             {
                 f = 1.0F;
             }
-
-            EntityQuiverModArrowNew entityarrow = new EntityQuiverModArrowNew(p_77615_2_, p_77615_3_, f * 3.0F * arrowspeedMult).setType(this.getArrow(p_77615_3_)).setSpecialStuff(6.5F);
+            Random r=new Random();
+            EntityQuiverModArrowNew entityarrow = new EntityQuiverModArrowNew(p_77615_2_, p_77615_3_, f * (3.0F+r.nextFloat()) * arrowspeedMult).setType(this.getArrow(p_77615_3_)).setSpecialStuff(6.5F);
             entityarrow.setThrower((Entity)p_77615_3_);
             	if(reps>0){
             		double x=entityarrow.posX;
@@ -160,12 +199,17 @@ public class QuiverBow extends ItemBow{
             		double z=entityarrow.posZ;
             		float pitch=entityarrow.rotationPitch;
             		float yaw=entityarrow.rotationYaw;
-            		Random r=new Random();
             		double xnow=x;
             		double ynow=y;
             		double znow=z;
             		float pitchnow=pitch;
             		float yawnow=yaw;
+            		xnow+=r.nextDouble();
+            		xnow-=r.nextDouble();
+            		ynow+=r.nextDouble();
+            		ynow-=r.nextDouble();
+            		znow+=r.nextDouble();
+            		znow-=r.nextDouble();
             		xnow+=r.nextDouble();
             		xnow-=r.nextDouble();
             		ynow+=r.nextDouble();
@@ -224,6 +268,30 @@ public class QuiverBow extends ItemBow{
             }
             else if(reps==0)
             {
+            	/*if(!RepetitiveSnippets.getQuivers(p_77615_3_).isEmpty()){
+            		for(int pot=0;pot<p_77615_3_.inventory.getSizeInventory();pot++){
+            			if(p_77615_3_.inventory.getStackInSlot(pot)!=null&&p_77615_3_.inventory.getStackInSlot(pot).getItem()==ModItems.quiver){
+            				System.out.println(RepetitiveSnippets.getQuivers(p_77615_3_).get(0));
+            				System.out.println(RepetitiveSnippets.getSelectedArrowItem(p_77615_3_));
+            				Quiver.removeArrow(p_77615_3_, RepetitiveSnippets.getQuivers(p_77615_3_).get(0), pot, RepetitiveSnippets.getSelectedArrowItem(p_77615_3_));
+            				break;
+            				//TODO last thing! Check what it's deleting and change if necessary
+            			}
+            		}
+            	}*/
+            	
+            	if (quiverStack != null)
+            	{
+            		Quiver.removeArrow(p_77615_3_, quiverStack, quiverIndex, arrowIndex);
+            	}
+            	else
+            	{
+            		arrowStack.stackSize--;
+            		
+            		if (arrowStack.stackSize < 1)
+            			p_77615_3_.inventory.setInventorySlotContents(arrowIndex, null);
+            	}
+            	
                 p_77615_3_.inventory.consumeInventoryItem(getArrowStackFromInv(p_77615_3_).getItem());
             }
             
@@ -262,7 +330,7 @@ public class QuiverBow extends ItemBow{
      */
     public ItemStack onItemRightClick(ItemStack is, World world, EntityPlayer p)
     {
-    	if(is.getItemDamage()==is.getMaxDamage()-1){
+    	if(is.getItemDamage()>=is.getMaxDamage()-1){
     		if(p.inventory.hasItem(ModItems.Bowstring)&&p.isSneaking()){
     		p.inventory.consumeInventoryItem(ModItems.Bowstring);
     		is.setItemDamage(0);
@@ -281,33 +349,45 @@ public class QuiverBow extends ItemBow{
 
         if (p.capabilities.isCreativeMode || hasArrow(p))
         {
-        	if((getArrowStackFromInv(p).getItem()) instanceof ItemQuiverModArrow)p.getEntityData().setString("usingArrow", ((ItemQuiverModArrow)(getArrowStackFromInv(p).getItem())).getName());
-        	else if((getArrowStackFromInv(p).getItem()) instanceof PotionArrow){
-        		Item omg=getArrowStackFromInv(p).getItem();
+        	InventorySlots arrowSlot = RepetitiveSnippets.getArrowSlot(p);
+            ItemStack arrowStack = null;
+            
+            if (arrowSlot != null)
+            {
+    	        arrowStack = arrowSlot.get("arrow").stack;
+            }
+        	if(arrowStack!=null){
+        	if(arrowStack.getItem() instanceof ItemQuiverModArrow)p.getEntityData().setString("BARusingArrow", ((ItemQuiverModArrow)arrowStack.getItem()).getName());
+        	else if(arrowStack.getItem() instanceof PotionArrow){
+        		Item omg=arrowStack.getItem();
         		String sub="";
         		String hi=((PotionArrow)omg).getName();
-        		if(PotionArrow.isSplash(omg.getDamage(this.getArrowStackFromInv(p))))sub="splash";
-        		p.getEntityData().setString("usingArrow", sub+hi);
+        		if(PotionArrow.isSplash(omg.getDamage(arrowStack)))sub="splash";
+        		p.getEntityData().setString("BARusingArrow", sub+hi);
+        		System.out.println(sub+hi);
         		
         	}
-        	else p.getEntityData().setString("usingArrow", "arrow");
-        	if(this.getArrowStackFromInv(p).getItem() instanceof ItemQuiverModArrow){
-        		ItemQuiverModArrow h =(ItemQuiverModArrow) this.getArrowStackFromInv(p).getItem();
-        		if(h.isSplittingArrow(this.getArrowStackFromInv(p).getItemDamage())){
-        			p.getEntityData().setInteger("splitArrowCount", h.getSplittingArrowCount(this.getArrowStackFromInv(p).getItemDamage()));
+        	else p.getEntityData().setString("BARusingArrow", "arrow");
+        	
+        	if(arrowStack.getItem() instanceof ItemQuiverModArrow){
+        		ItemQuiverModArrow h =(ItemQuiverModArrow) arrowStack.getItem();
+        		if(h.isSplittingArrow(arrowStack.getItemDamage())){
+        			p.getEntityData().setInteger("splitArrowCount", h.getSplittingArrowCount(arrowStack.getItemDamage()));
         		}
         		else p.getEntityData().setInteger("splitArrowCount", 1);
         	}
-        	else{
-        		PotionArrow h =(PotionArrow) this.getArrowStackFromInv(p).getItem();
-        		if(h.isSplittingArrow(this.getArrowStackFromInv(p).getItemDamage())){
-        			p.getEntityData().setInteger("splitArrowCount", h.getSplittingArrowCount(this.getArrowStackFromInv(p).getItemDamage()));
+        	else if(arrowStack.getItem()==ModItems.PotArrow){
+        		PotionArrow h =(PotionArrow) arrowStack.getItem();
+        		if(h.isSplittingArrow(arrowStack.getItemDamage())){
+        			p.getEntityData().setInteger("splitArrowCount", h.getSplittingArrowCount(arrowStack.getItemDamage()));
         		}
         		else p.getEntityData().setInteger("splitArrowCount", 1);
         	}
-        	//TODO so much arrow crap to deal with don't even know where to start
+        	}
             p.setItemInUse(is, this.getMaxItemUseDuration(is));
+            if(!world.isRemote);
         }
+        //TODO not synced to server
 
         return is;
     	}

@@ -356,7 +356,6 @@ public class WeirdRenderBowThing implements IItemRenderer {
 				fullBright = BowArrowIcons.getFullBright(bow.getBowArrowIconName(),
 		    			((IArrowIcons)arrowItem).getSpecialBowIconName(arrowStack.getItemDamage()));
 			
-			//TODO reactivate when custom arrow come back
 			boolean isFullBright = fullBright > 0;
 			
 			float lightmapX = -1;
@@ -463,8 +462,7 @@ public class WeirdRenderBowThing implements IItemRenderer {
 					
 					for (int pass = 0; pass < 3; pass++)
 					{
-						icon = bow.getArrowNew(iconOffset, bow.getArrow(player), pass,bow.getSplit(player)!=1);
-						//TODO splitting arrow
+						icon = bow.getArrowNew(iconOffset, bow.getArrow(player), pass,bow.getSplit(player)>1);
 						if (icon != null)
 						{
 							GL11.glPushMatrix();

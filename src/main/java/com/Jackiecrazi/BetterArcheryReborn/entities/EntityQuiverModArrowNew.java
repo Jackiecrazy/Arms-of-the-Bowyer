@@ -29,6 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -129,7 +130,7 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
     
     public void setThrowableHeading(double p_70186_1_, double p_70186_3_, double p_70186_5_, float p_70186_7_, float p_70186_8_)
     {
-        super.setThrowableHeading(p_70186_1_, p_70186_3_, p_70186_5_, p_70186_7_, p_70186_8_);
+        //super.setThrowableHeading(p_70186_1_, p_70186_3_, p_70186_5_, p_70186_7_, p_70186_8_);
     }
 
     /**
@@ -140,6 +141,32 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
     public void setPositionAndRotation2(double p_70056_1_, double p_70056_3_, double p_70056_5_, float p_70056_7_, float p_70056_8_, int p_70056_9_)
     {
         
+    }
+    @Override
+    public void writeEntityToNBT(NBTTagCompound n){
+    	super.writeEntityToNBT(n);
+    	n.setString("type", type);
+    	n.setFloat("special", getSpecialStuff());
+    	n.setInteger("duration", getDuration());
+    	n.setInteger("potency", getPotency());
+    	n.setDouble("damage", getDamage());
+    	n.setInteger("potionDamage", potionDamage);
+    	NBTTagCompound shooter=new NBTTagCompound();
+    	if(this.getThrower()!=null){
+    		this.getThrower().writeToNBT(shooter);
+    	}
+    	n.setTag("shooter", shooter);
+    }
+    @Override
+    public void readEntityFromNBT(NBTTagCompound n){
+    	super.readEntityFromNBT(n);
+    	this.type=n.getString("type");
+    	this.usefulID=n.getInteger("special");
+    	this.duration=n.getInteger("duration");
+    	this.potency=n.getInteger("potency");
+    	this.damage=n.getDouble("damage");
+    	this.potionDamage=n.getInteger("potionDamage");
+    	//TODO get the shooter
     }
     /**
      * Called to update the entity's position/logic.
@@ -652,7 +679,7 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
     }
     
 	public void performEffectEntity(String type, Entity uke, Entity seme) {
-		if(this.type!=null){
+		if(this.type!=null&&seme!=null){
 		if (type.equals("firearrow")) {
 			uke.setFire(1000);
 		}
@@ -673,12 +700,12 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
 	@SuppressWarnings("unchecked")
 	public void performEffectBlock(String type, Entity seme,
 			MovingObjectPosition mop) {
-		if(type!=null){
+		if(type!=null&&seme!=null){
 		int x=mop.blockX;
 		int y=mop.blockY;
 		int z=mop.blockZ;
 		int side=mop.sideHit;
-		if (type.equals("firearrow")) {
+		if (type.equals("firearrow")&&seme!=null) {
 			World w = seme.worldObj;
 			switch (side) {
 			case 0:
@@ -714,7 +741,6 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
 		}
 		if(this.type.equals("splashpotionarrow")){
 			List<EntityLivingBase> hi=this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(x-2, y-1, z-2, x+2, y+3, z+2));
-			//TODO crashes bc the bound is null
 			if(!hi.isEmpty()){
 				Iterator i=hi.iterator();
 				while(i.hasNext()){
@@ -752,7 +778,7 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
 			}
 		}
 		
-		if (type.equals("enderarrow")) {
+		if (type.equals("enderarrow")&&seme!=null) {
 			for (int i = 0; i < 32; ++i) {
 				this.worldObj.spawnParticle("portal", this.posX,
 						this.posY + this.rand.nextDouble() * 2.0D,
@@ -788,12 +814,10 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
 		
 	}
 
-	@Override
 	public Entity getThrower() {
 		return shootingEntity;
 	}
 
-	@Override
 	public void setThrower(Entity entity) {
 		this.shootingEntity=entity;
 	}

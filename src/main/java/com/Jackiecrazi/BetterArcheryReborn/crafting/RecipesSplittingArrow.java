@@ -17,13 +17,11 @@ public class RecipesSplittingArrow implements IRecipe {
 
 	ItemStack dummyOutput = null;
 
-	@Override
 	public boolean matches(InventoryCrafting inventoryCrafting, World world)
 	{
 		return getCraftingResult(inventoryCrafting) != null;
 	}
 
-	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting)
 	{
 		int stackCount = 0;
@@ -131,13 +129,11 @@ public class RecipesSplittingArrow implements IRecipe {
 		return null;
 	}
 
-	@Override
 	public int getRecipeSize()
 	{
 		return 4;
 	}
 
-	@Override
 	public ItemStack getRecipeOutput()
 	{
 		if (dummyOutput == null)
@@ -145,5 +141,7 @@ public class RecipesSplittingArrow implements IRecipe {
 		
 		return dummyOutput;
 	}
+
+	
 
 }

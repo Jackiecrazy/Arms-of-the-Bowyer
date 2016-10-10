@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="com/Jackiecrazi/BetterArcheryReborn/entities/" kind="src" path="build/sources/java"/>
+	<classpathentry kind="src" path="build/sources/java/com/Jackiecrazi/BetterArcheryReborn/entities"/>
+	<classpathentry excluding="main/java/com/Jackiecrazi/BetterArcheryReborn/entities/|main/java/" kind="src" path="src"/>
+	<classpathentry excluding="com/Jackiecrazi/BetterArcheryReborn/entities/" kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/java/com/Jackiecrazi/BetterArcheryReborn/entities"/>
+	<classpathentry kind="lib" path="build/libs/BetterArcheryReborn-0.0.2-deobf.jar"/>
+	<classpathentry kind="lib" path="build/libs/BetterArcheryReborn-0.0.2-sources.jar"/>
+	<classpathentry kind="lib" path="build/libs/BetterArcheryReborn-0.0.2.jar"/>
+	<classpathentry kind="lib" path="gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="lib" path="mods/1.7.10/CodeChickenLib-1.7.10-1.1.1.99-dev.jar"/>
+	<classpathentry kind="lib" path="mods/CodeChickenCore-1.7.10-1.0.4.29-dev.jar"/>
+	<classpathentry kind="lib" path="mods/NotEnoughItems-1.7.10-1.0.3.74-dev.jar"/>
+	<classpathentry kind="lib" path="mods/RenderPlayerAPI-1.7.10-1.4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="build/classes/main"/>
+</classpath>

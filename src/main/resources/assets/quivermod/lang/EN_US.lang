@@ -1,7 +1,7 @@
 <comment>English (en_US) Localization File</comment>
 <!--  Creative Mode Tabs  -->
-itemGroup.BARBows=Bows
-itemGroup.BARArrows=Arrows
+itemGroup.BABow=Bows
+itemGroup.BAArrow=Arrows
 <!--  Blocks  -->
 tile.tileEntityTorch.name=Tile Entity Torch Block
 item.quiver.name=Quiver
@@ -10,7 +10,7 @@ item.quiverBow.name=Bow
 item.RecurveBow.name=Recurve Bow
 item.Yumi.name=Yumi
 item.Longbow.name=Longbow
-item.quiverBowComposite.name=Composite Bow
+item.CompositeBow.name=Composite Bow
 item.bowstring.name=Bowstring
 <!--  Arrows  -->
 item.arrow.name.plural=Arrows
@@ -29,6 +29,10 @@ item.drillarrow.name.plural=Drill Arrows
 item.potionArrow.name=Potion Arrow
 item.potionArrow.name.plural=Potion Arrows
 item.bowstring.name=Bowstring
+item.yugake.name=Yugake
+item.bracer.name=Bracer
+item.thumbring.name=Thumb Ring
+item.fingertab.name=Finger Tab
 <!--  Crafting Items  -->
 item.sinew.name=Sinew
 item.bottledrottenflesh.name=Bottled Rotten Flesh
@@ -41,3 +45,16 @@ quiverModArrow.splitting.prefix.afterNum=-Splitting
 quiverModArrow.splitting.postfix/>
 quiverModArrow.prefix.broken=Broken
 item.bowstring.suffix=Use to repair broken bows
+key.BAR.switchArrowForward=Next Arrow
+key.BAR.switchArrowBackwards=Previous Arrow
+key.BAR.switchQuiverMOunt=Switch Quiver Position (RenderPlayerAPI only)
+
+<Namea Ultimatum>
+item.arrowultimate=Archer's Wrath
+item.torcharrowultimate=Light Arrows
+item.drillarrowultimate=Tunneler's Frenzy
+item.potionArrowultimate=Witch's Rain
+item.enderarrowultimate=What exactly are you trying to do?
+item.timedarrowultimate=Shrapnel Grenade
+item.impactarrowultimate=Miniature Nuke
+item.firearrowultimate=Herobrine's Curse

@@ -8,6 +8,8 @@ import net.minecraft.world.World;
 
 import com.Jackiecrazi.BetterArcheryReborn.Items.ModItems;
 import com.Jackiecrazi.BetterArcheryReborn.crafting.ModCrafting;
+import com.Jackiecrazi.BetterArcheryReborn.dumbpackets.FirstMessage;
+import com.Jackiecrazi.BetterArcheryReborn.dumbpackets.SecondMessage;
 import com.Jackiecrazi.BetterArcheryReborn.entities.ModEntities;
 import com.Jackiecrazi.BetterArcheryReborn.lenders.QuiverModTickHandler;
 import com.Jackiecrazi.BetterArcheryReborn.quivering.QuiverGuiHandler;
@@ -17,6 +19,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy {
 	public static Minecraft mc;
@@ -24,8 +27,12 @@ public class CommonProxy {
 	 @EventHandler
 	    public void preInit(FMLPreInitializationEvent event)
 	    {
+		 ConfigofJustice.CreatioExNihilo(event.getSuggestedConfigurationFile());
 	    	ModItems.itemify();
 	    	ModEntities.init();
+	    	int discriminator=0;
+	    	BAR.net.registerMessage(FirstMessage.Handler.class, FirstMessage.class, discriminator++, Side.SERVER);
+	    	BAR.net.registerMessage(SecondMessage.Handler.class, SecondMessage.class, discriminator++, Side.SERVER);
 	    }
 	 @EventHandler
 	    public void init(FMLInitializationEvent event)

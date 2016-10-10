@@ -1,7 +1,5 @@
 package com.Jackiecrazi.BetterArcheryReborn.lenders;
 
-import java.util.EnumSet;
-
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
@@ -10,10 +8,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import com.Jackiecrazi.BetterArcheryReborn.BAR;
 import com.Jackiecrazi.BetterArcheryReborn.Items.QuiverBow;
+import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
+import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.PotionArrow;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 
@@ -53,7 +56,7 @@ public class QuiverModTickHandler extends Gui {
 	
 	public QuiverModTickHandler() {
 	}
-
+	
 	public void tickStart(TickEvent.PlayerTickEvent hi)
 	{
 	    EntityPlayerSP thePlayer = BAR.proxy.mc.thePlayer;
@@ -104,8 +107,8 @@ public class QuiverModTickHandler extends Gui {
 		        		}
 		        	}
 				}
-				/*
-				ItemStack quiver = null;
+				
+/*				ItemStack quiver = null;
 				
 				InventorySlots slots = BAR.playerValueManager.getArrowQuiverSlot(tickPlayer);
 				
@@ -121,11 +124,11 @@ public class QuiverModTickHandler extends Gui {
 				
 				ItemStack heldStack = tickPlayer.getHeldItem();
 				
-				if (heldStack != null && heldStack.itemID == QuiverMod.quiver.itemID && heldStack.equals(quiver))
+				if (heldStack != null && heldStack.getItem() == ModItems.quiver && heldStack.equals(quiver))
 				{
-					int heldQuiverID = QuiverMod.quiver.getUniqueID(heldStack);
+					int heldQuiverID = ModItems.quiver.getUniqueID(heldStack);
 					
-					if (QuiverMod.quiver.getUniqueID(quiver) == heldQuiverID)
+					if (ModItems.quiver.getUniqueID(quiver) == heldQuiverID)
 					{
 						quiver = null;
 					}
@@ -136,13 +139,13 @@ public class QuiverModTickHandler extends Gui {
 				
 				if (quiver != null)
 				{
-					uniqueID = QuiverMod.quiver.getUniqueID(quiver);
+					uniqueID = ModItems.quiver.getUniqueID(quiver);
 					damage = quiver.getItemDamage();
 				}
 				
 				if (prevHeldStack != heldStack || uniqueID != prevQuiverUniqueID || damage != prevQuiverDamage)
 				{
-					QuiverMod.playerValueManager.setUsingQuiver(tickPlayer.getEntityName(), damage);
+					QuiverMod.playerValueManager.setUsingQuiver(tickPlayer.getDisplayName(), damage);
 					QuiverMod.playerValueManager.sendValuesToServer(tickPlayer);
 				}
 				

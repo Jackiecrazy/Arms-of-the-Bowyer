@@ -40,6 +40,10 @@ public class ArrowNameHelper {
 	
 	public static String getName(Item item, boolean multipleArrows)
 	{
+		if(item instanceof ItemQuiverModArrow){
+			ItemQuiverModArrow fancy=(ItemQuiverModArrow)item;
+			return getName(item, item.getUnlocalizedName(), multipleArrows);
+		}
 		return getName(item, item.getUnlocalizedName(), multipleArrows);
 	}
 	
