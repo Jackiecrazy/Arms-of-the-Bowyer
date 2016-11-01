@@ -2,6 +2,7 @@ package com.Jackiecrazi.BetterArcheryReborn.Items;
 
 import java.util.ArrayList;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -10,6 +11,7 @@ import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
 import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.PotionArrow;
 import com.Jackiecrazi.BetterArcheryReborn.quivering.Quiver;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModItems {
@@ -31,7 +33,6 @@ public class ModItems {
 	public static Item TorchArrow=new ItemQuiverModArrow().setUnlocalizedName("torcharrow").setTextureName("quivermod:torcharrow");
 	public static Item onemisc=new MiscItemsWithSizeOne();
 	public static Item misc=new MiscItems();
-	public static Item acc=new Accessories();
 	public static Quiver quiver=new Quiver();
 	
 	public static void itemify(){
@@ -51,7 +52,7 @@ public class ModItems {
 		GameRegistry.registerItem(quiver, "quiver");
 		GameRegistry.registerItem(misc, "quivermisc");
 		GameRegistry.registerItem(onemisc, "onemisc");
-		GameRegistry.registerItem(acc, "quiveraccessories");
+		arrowItemList.add(Items.arrow);
 	}
 	public static boolean arrayItemStackContains(ArrayList<ItemStack> list, ItemStack findStack)
 	{

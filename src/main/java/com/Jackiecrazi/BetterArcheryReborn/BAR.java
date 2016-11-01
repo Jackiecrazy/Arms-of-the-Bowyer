@@ -11,8 +11,10 @@ import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
 import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.PotionArrow;
 import com.Jackiecrazi.BetterArcheryReborn.dumbpackets.FirstMessage;
 import com.Jackiecrazi.BetterArcheryReborn.lenders.QuiverModTickHandler;
+import com.Jackiecrazi.BetterArcheryReborn.quivering.Quiver;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -28,6 +30,7 @@ public class BAR
 {
 	@Mod.Instance("BetterArcheryReborn")
 	public static BAR inst;
+	public static boolean BaublesLoaded;
 	BAREventHandler eh=new BAREventHandler();
     public static final String MODID = "BetterArcheryReborn";
     public static final String MODVER = "0.0";
@@ -50,6 +53,7 @@ public class BAR
     @EventHandler
     public void preinit(FMLPreInitializationEvent event)
     {
+		ConfigofJustice.CreatioExNihilo(event.getSuggestedConfigurationFile());
     	net=NetworkRegistry.INSTANCE.newSimpleChannel("BARnet");
     	this.proxy.preInit(event);
     	FMLCommonHandler.instance().bus().register(h);
@@ -67,6 +71,7 @@ public class BAR
     public void postinit(FMLPostInitializationEvent event)
     {
     	this.proxy.postInit(event);
+    	BaublesLoaded=Loader.isModLoaded("Baubles");
     }
 	public static void log(String string) {
 		// TODO Auto-generated method stub
@@ -74,11 +79,14 @@ public class BAR
 	}
 	public static boolean isArrow(Item item)
 	{
-		return item == Items.arrow || item instanceof ItemQuiverModArrow || item instanceof PotionArrow;
+		return item == Items.arrow || item instanceof ItemQuiverModArrow || item instanceof PotionArrow||item==ModItems.quiver;
 	}
 	
 	public static boolean isArrow(ItemStack itemStack)
 	{
+		if((itemStack.getItem()==ModItems.quiver&&Quiver.getArrowCount(itemStack)>0)){
+			return true;
+		}
 		return isArrow(itemStack.getItem());
 	}
 }

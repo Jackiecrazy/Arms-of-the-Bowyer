@@ -6,10 +6,14 @@ import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import baubles.common.lib.PlayerHandler;
 
 import com.Jackiecrazi.BetterArcheryReborn.BAR;
 import com.Jackiecrazi.BetterArcheryReborn.Items.ModItems;
 import com.Jackiecrazi.BetterArcheryReborn.quivering.QuiverInventory;
+import com.google.common.collect.ObjectArrays;
+
+import cpw.mods.fml.common.Loader;
 
 public class RepetitiveSnippets {
 	/*public static ArrayList<ItemStack> getQuivers(EntityPlayer player)
@@ -183,11 +187,28 @@ public class RepetitiveSnippets {
         
         return out;
     }*/
+	public static boolean hasQuiver(EntityPlayer p){
+		boolean ret=false;
+		ret=p.inventory.hasItem(ModItems.quiver);
+		for(int rep=0;rep<PlayerHandler.getPlayerBaubles(p).getSizeInventory();rep++){
+			ItemStack i=PlayerHandler.getPlayerBaubles(p).getStackInSlot(rep);
+			if(i!=null&&i.getItem()==ModItems.quiver){
+				ret=true;
+			}
+		}
+		return ret;
+	}
 	public static ItemStack getQuiverStack(EntityPlayer p){
 		ItemStack quiver=null;
 		for(int x=0;x<p.inventory.getSizeInventory();x++){
 			if(p.inventory.getStackInSlot(x)!=null &&p.inventory.getStackInSlot(x).getItem()==ModItems.quiver)
 				quiver=p.inventory.getStackInSlot(x);
+		}
+		for(int rep=0;rep<PlayerHandler.getPlayerBaubles(p).getSizeInventory();rep++){
+			ItemStack i=PlayerHandler.getPlayerBaubles(p).getStackInSlot(rep);
+			if(i!=null&&i.getItem()==ModItems.quiver){
+				quiver=PlayerHandler.getPlayerBaubles(p).getStackInSlot(rep);
+			}
 		}
 		return quiver;
 	}
@@ -199,6 +220,14 @@ public class RepetitiveSnippets {
 					quivers.add(p.inventory.getStackInSlot(x));
 			}
 		}
+		if(BAR.BaublesLoaded){
+		for(int x=0;x<PlayerHandler.getPlayerBaubles(p).stackList.length;x++){
+			ItemStack bau=PlayerHandler.getPlayerBaubles(p).getStackInSlot(x);
+			if(bau!=null&&bau.getItem()==ModItems.quiver){
+				quivers.add(PlayerHandler.getPlayerBaubles(p).getStackInSlot(x));
+			}
+		}
+	}
 		return quivers;
 	}
 	public static ArrayList<ItemStack> getArrowTypesHeld(EntityPlayer player)
@@ -253,7 +282,17 @@ public class RepetitiveSnippets {
         if (quiverIndex >= 0)
         {
         	out = new InventorySlots();
-        	quiverStack = player.inventory.getStackInSlot(quiverIndex);
+        	if(quiverIndex<=player.inventory.getSizeInventory()){
+        		quiverStack = player.inventory.getStackInSlot(quiverIndex);
+        		System.out.println("found quiverStack within "+player.inventory.getSizeInventory()+", commencing the crunch");
+        	}
+        	else if(Loader.isModLoaded("Baubles")){
+        		quiverStack=PlayerHandler.getPlayerBaubles(player).getStackInSlot(quiverIndex-player.inventory.getSizeInventory());
+        		System.out.println("found quiverStack out of "+player.inventory.getSizeInventory()+", commencing the crunch at Baubles slot "+(quiverIndex-player.inventory.getSizeInventory()));
+        	}
+        	//TODO there's your problem.
+        	else throw new IllegalArgumentException("you went above 36 without Baubles? ludicrous!");
+        	System.out.println("QuiverStack is "+quiverStack);
         	InventorySlot quiver = new InventorySlot(quiverStack, quiverIndex);
         	out.set("quiver", quiver);
         	
@@ -265,24 +304,33 @@ public class RepetitiveSnippets {
 	        	out.set("arrow", arrow);
         	}
         }
-        
         return out;
     }
     
     public static InventorySlots getArrowSlot(EntityPlayer player)
     {
     	InventorySlots out = getArrowQuiverSlot(player);
-        
         if (out == null || out.get("arrow") == null)
         {
         	int i = 0;
-        	
-        	for (ItemStack arrow : player.inventory.mainInventory)
+        	ItemStack[] baubles = null;
+        	if(BAR.BaublesLoaded){ baubles=PlayerHandler.getPlayerBaubles(player).stackList;}
+        	ItemStack[] both=ObjectArrays.concat(ObjectArrays.concat(player.inventory.mainInventory,player.inventory.armorInventory,ItemStack.class), baubles, ItemStack.class);
+        	System.out.println("both length is "+both.length);
+        	for (ItemStack arrow : both)
         	{
         		if (arrow != null && BAR.isArrow(arrow))
         		{
         			out = new InventorySlots();
         			out.set("arrow", new InventorySlot(arrow, i));
+        	    	System.out.println();
+        	    	System.out.println();
+        	    	System.out.println();
+        	    	System.out.println("found arrow slot at "+i);
+        	    	System.out.println();
+        	    	System.out.println();
+        	    	System.out.println();
+        			System.out.println();
         			break;
         		}
         		
@@ -298,7 +346,8 @@ public class RepetitiveSnippets {
     	int quiverIndex = -1;
     	int arrowIndex = -1;
     	
-		ItemStack[] inv = player.inventory.mainInventory;
+		ItemStack[] inv = ObjectArrays.concat(player.inventory.mainInventory,player.inventory.armorInventory,ItemStack.class);
+		ItemStack[] both=ObjectArrays.concat(inv, PlayerHandler.getPlayerBaubles(player).stackList, ItemStack.class);
 		ArrayList<ItemStack> arrowTypesHeld = getArrowTypesHeld(player);
 		int arrowTypeCount = arrowTypesHeld.size();
 		int arrowItem = getSelectedArrowItem(player);
@@ -315,9 +364,9 @@ public class RepetitiveSnippets {
 			Item arrowID = arrowType.getItem();
 			int arrowDamage = arrowType.getItemDamage();
 			
-			for (int quiverI = inv.length - 1; quiverI >= 0; quiverI--)
+			for (int quiverI = both.length - 1; quiverI >= 0; quiverI--)
 			{
-				ItemStack quiverStack = inv[quiverI];
+				ItemStack quiverStack = both[quiverI];
 				
 				if (quiverStack != null && quiverStack.getItem() == ModItems.quiver)
 				{
@@ -351,5 +400,9 @@ public class RepetitiveSnippets {
     public static int getWornQuiverType(EntityPlayer playerName)
     {
     	return playerName.getEntityData().getInteger("wornQuiverType");
+    }
+    public void setUsingQuiver(EntityPlayer playerName, int metadata)
+    {
+    	playerName.getEntityData().setInteger("usingQuiverMetadata", metadata);
     }
 }

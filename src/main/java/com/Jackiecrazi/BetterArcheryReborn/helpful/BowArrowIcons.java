@@ -67,6 +67,7 @@ public class BowArrowIcons {
 					fullBrightMap.put(specialArrowName, arrowIcons.getFullBright());
 				}
 			}
+			else register(bowName, "arrow", iconRegister, 1);
 		}
 		
 		register(bowName, "splittingarrow", iconRegister, 1);

@@ -36,6 +36,7 @@ public class ConfigofJustice {
 	
 	/* General */
 	public static boolean useChunkLoader = true;
+	public static boolean baublesIntegration=true;
 	public static int slowMoSetting = 0;
 	public static boolean offsetArrows = true;
 	public static boolean allowSkeletonGriefing = false;
@@ -60,10 +61,11 @@ public class ConfigofJustice {
 	
 	public static void CreatioExNihilo(File dumdum){
 		Configuration c=new Configuration(dumdum);
+		configFilePath=c.toString();
 		try{
 			c.load();
-			animationStyle=c.getInt(configFilePath, configFilePath, 0, 0, 1, "what type of animation is it?");
-			
+			animationStyle=c.getInt("Animation Style", "Renders", 0, 0, 1, "what type of animation is it?");
+			baublesIntegration=c.getBoolean("Baubles Integration", "Mod Compatibility", true, "Enable Baubles Integration(finger tab, thumb ring)");
 		}
 		catch(Exception er){
 			LogManager.getLogger("BAR").fatal("You have done something pretty hard (easy) to do. Here's an error.");

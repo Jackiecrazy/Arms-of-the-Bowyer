@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 public class InventorySlots {
 	
-	private HashMap<Object, InventorySlot> slots = new HashMap(36);
+	private HashMap<Object, InventorySlot> slots = new HashMap(44);
 	
 	public InventorySlot get(Object key)
 	{

@@ -8,7 +8,7 @@ public class Longbow extends QuiverBow {
 		this.arrowspeedMult=1.5F;
 		this.setUnlocalizedName("Longbow");
 		this.type=this;
-		this.pullbackMult=1.5F;//1.5f
+		this.pullbackMult=1.5F;
 		this.zoomMult=1.75F;
 		this.rangeMult=1.75F;
 		this.animIconCount=7;

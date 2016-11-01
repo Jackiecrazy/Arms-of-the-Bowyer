@@ -21,6 +21,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import baubles.common.lib.PlayerHandler;
+
 import com.Jackiecrazi.BetterArcheryReborn.BAR;
 import com.Jackiecrazi.BetterArcheryReborn.ConfigofJustice;
 import com.Jackiecrazi.BetterArcheryReborn.Items.ModItems;
@@ -120,7 +122,7 @@ public class QuiverModOverlayRenderer extends Gui {
 						RepetitiveSnippets.setSelectedArrowItem(player, selectedArrowItemIndex);
 					}
 					
-					if (quiverCount > 0 && player.inventory.hasItem(ModItems.quiver))
+					if (quiverCount > 0 && (RepetitiveSnippets.hasQuiver(player)))
 					{
 						ScaledResolution res = event.resolution;
 						FontRenderer fontRenderer = mc.fontRenderer;

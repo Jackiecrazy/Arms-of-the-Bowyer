@@ -8,15 +8,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import com.Jackiecrazi.BetterArcheryReborn.BAR;
+import com.Jackiecrazi.BetterArcheryReborn.Items.ModItems;
 import com.Jackiecrazi.BetterArcheryReborn.Items.QuiverBow;
-import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
-import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.PotionArrow;
+import com.Jackiecrazi.BetterArcheryReborn.helpful.InventorySlot;
+import com.Jackiecrazi.BetterArcheryReborn.helpful.InventorySlots;
+import com.Jackiecrazi.BetterArcheryReborn.helpful.RepetitiveSnippets;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Type;
 
@@ -108,9 +107,9 @@ public class QuiverModTickHandler extends Gui {
 		        	}
 				}
 				
-/*				ItemStack quiver = null;
+				ItemStack quiver = null;
 				
-				InventorySlots slots = BAR.playerValueManager.getArrowQuiverSlot(tickPlayer);
+				InventorySlots slots = RepetitiveSnippets.getArrowQuiverSlot(tickPlayer);
 				
 				if (slots != null)
 				{
@@ -143,16 +142,16 @@ public class QuiverModTickHandler extends Gui {
 					damage = quiver.getItemDamage();
 				}
 				
-				if (prevHeldStack != heldStack || uniqueID != prevQuiverUniqueID || damage != prevQuiverDamage)
+				/*if (prevHeldStack != heldStack || uniqueID != prevQuiverUniqueID || damage != prevQuiverDamage)
 				{
-					QuiverMod.playerValueManager.setUsingQuiver(tickPlayer.getDisplayName(), damage);
+					RepetitiveSnippets.setUsingQuiver(tickPlayer, damage);
 					QuiverMod.playerValueManager.sendValuesToServer(tickPlayer);
-				}
+				}*/
+				//TODO is this really that important?
 				
 				prevQuiverUniqueID = uniqueID;
 				prevQuiverDamage = damage;
-				prevHeldStack = heldStack;*/
-				//TODO remove seal when quivers reimplemented
+				prevHeldStack = heldStack;
 		}
 	}
 	

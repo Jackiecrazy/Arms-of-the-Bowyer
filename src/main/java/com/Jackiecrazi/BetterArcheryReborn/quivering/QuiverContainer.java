@@ -46,10 +46,10 @@ public class QuiverContainer extends Container {
             	int slotPosX = 8 + j * 18;
             	int slotPosY = 66 + i * 18;
             	
-            	//if (slotIndex != playerInv.currentItem)
+            	if (slotIndex != playerInv.currentItem)
             		addSlotToContainer(new Slot(playerInv, slotIndex, slotPosX, slotPosY));
-            	/*else
-            		addSlotToContainer(new SlotReadOnly(playerInv, slotIndex, slotPosX, slotPosY));*/
+            	else
+            		addSlotToContainer(new SlotReadOnly(playerInv, slotIndex, slotPosX, slotPosY));
             }
 	    }
 	
@@ -58,10 +58,10 @@ public class QuiverContainer extends Container {
         	int slotPosX = 8 + i * 18;
         	int slotPosY = 124;
 
-        	//if (i != playerInv.currentItem)
+        	if (i != playerInv.currentItem)
         		addSlotToContainer(new Slot(playerInv, i, slotPosX, slotPosY));
-        	/*else
-        		addSlotToContainer(new SlotReadOnly(playerInv, i, slotPosX, slotPosY));*/
+        	else
+        		addSlotToContainer(new SlotReadOnly(playerInv, i, slotPosX, slotPosY));
 	    }
 	    // End player inventory
 		

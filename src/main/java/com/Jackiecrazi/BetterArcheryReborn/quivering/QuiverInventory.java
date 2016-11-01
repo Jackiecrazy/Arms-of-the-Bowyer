@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
+import baubles.common.lib.PlayerHandler;
 
 import com.Jackiecrazi.BetterArcheryReborn.BAR;
 
@@ -14,16 +15,18 @@ public class QuiverInventory implements IInventory {
 
 	public ItemStack[] inv;
 	public InventoryPlayer playerInv;
+	public EntityPlayer playerItself;
 	public int playerInvIndex;
 	public static int size = 4;
 	public static int stackLimit = 16;
 
-	public QuiverInventory(InventoryPlayer ownerInv, int invIndex) {
+	public QuiverInventory(EntityPlayer p,InventoryPlayer ownerInv, int invIndex) {
 		playerInv = ownerInv;
 		playerInvIndex = invIndex;
+		playerItself=p;
 		inv = new ItemStack[size];
 		
-		ItemStack stack = ownerInv.mainInventory[invIndex];
+		ItemStack stack = invIndex<=ownerInv.getSizeInventory()?ownerInv.mainInventory[invIndex]:PlayerHandler.getPlayerBaubles(p).getStackInSlot(invIndex-ownerInv.getSizeInventory());
 		getInventory(stack, false);
 	}
 
@@ -161,7 +164,7 @@ public class QuiverInventory implements IInventory {
 			i++;
 		}
 		
-		ItemStack quiverStack = playerInv.mainInventory[playerInvIndex];
+		ItemStack quiverStack = playerInvIndex<=playerInv.getSizeInventory()?playerInv.mainInventory[playerInvIndex]:PlayerHandler.getPlayerBaubles(playerItself).getStackInSlot(playerInvIndex-playerInv.getSizeInventory());
 
 		quiverStack.getTagCompound().setTag("quiver", quiverCompound);
 		
@@ -170,7 +173,7 @@ public class QuiverInventory implements IInventory {
 	
 	public void updateDamage()
 	{
-		updateDamage(playerInv.mainInventory[playerInvIndex]);
+		updateDamage(playerInvIndex<=playerInv.getSizeInventory()?playerInv.mainInventory[playerInvIndex]:PlayerHandler.getPlayerBaubles(playerItself).getStackInSlot(playerInvIndex-playerInv.getSizeInventory()));
 	}
 	
 	public void updateDamage(ItemStack quiverStack)

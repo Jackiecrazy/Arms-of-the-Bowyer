@@ -1,0 +1,17 @@
+[
+{
+  "modid": "BetterArcheryReborn",
+  "name": "Arms of the Bowyer",
+  "description": "Bows, arrows, and everything archery",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Jackiecrazy","Yooksi","Zaggy1024"],
+  "credits": "The Forge guys, Mojang, Azanor for Baubles, and Divisor for RenderPlayerAPI",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["Baubles","TravellersGear","renderplayerapi"]
+  "useDependencyInformation": "true"
+}
+]

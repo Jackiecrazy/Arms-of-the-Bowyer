@@ -2,20 +2,22 @@ package com.Jackiecrazi.BetterArcheryReborn.Items;
 
 import java.util.List;
 
-import com.Jackiecrazi.BetterArcheryReborn.BAR;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
 
-public class Accessories extends Item{
+import com.Jackiecrazi.BetterArcheryReborn.BAR;
+public class Accessories extends Item implements IBauble{
 	public String[] stuff;
 	public IIcon[] icons;
 	public Accessories(){
 		super();
-		stuff=new String[]{"thumbring","fingertab","yugake","bracer"};
+		stuff=new String[]{"thumbring","fingertab"};//,"yugake","bracer"};
 		this.setCreativeTab(BAR.BARBow);
 		this.hasSubtypes=true;
 	}
@@ -64,4 +66,36 @@ public class Accessories extends Item{
 		
         return icons[damage];
     }
+	@Override
+	public BaubleType getBaubleType(ItemStack i) {
+		return BaubleType.RING;
+	}
+	@Override
+	public void onWornTick(ItemStack paramItemStack,
+			EntityLivingBase paramEntityLivingBase) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onEquipped(ItemStack is,
+			EntityLivingBase elb) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onUnequipped(ItemStack is,
+			EntityLivingBase elb) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public boolean canEquip(ItemStack paramItemStack,
+			EntityLivingBase paramEntityLivingBase) {
+		return true;
+	}
+	@Override
+	public boolean canUnequip(ItemStack paramItemStack,
+			EntityLivingBase paramEntityLivingBase) {
+		return true;
+	}
 }

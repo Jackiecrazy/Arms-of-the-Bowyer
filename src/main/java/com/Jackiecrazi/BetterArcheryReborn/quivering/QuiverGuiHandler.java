@@ -9,7 +9,7 @@ public class QuiverGuiHandler implements IGuiHandler {
 
 	private QuiverInventory getQuiverInventory(EntityPlayer player)
 	{
-		QuiverInventory inv = new QuiverInventory(player.inventory, player.inventory.currentItem);
+		QuiverInventory inv = new QuiverInventory(player,player.inventory, player.inventory.currentItem);
 		
 		return inv;
 	}

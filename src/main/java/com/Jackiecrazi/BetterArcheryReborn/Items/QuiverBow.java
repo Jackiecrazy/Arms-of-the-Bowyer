@@ -20,8 +20,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
+import baubles.common.lib.PlayerHandler;
 
 import com.Jackiecrazi.BetterArcheryReborn.BAR;
+import com.Jackiecrazi.BetterArcheryReborn.CommonProxy;
 import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
 import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.PotionArrow;
 import com.Jackiecrazi.BetterArcheryReborn.entities.EntityQuiverModArrowNew;
@@ -55,6 +57,7 @@ public class QuiverBow extends ItemBow{
 	protected int defaultMaxItemUse = 72000;
 	protected int notchTime = 5;
 	protected int noQuiverUsePenalty = 15;
+	protected int accessoryBuff = 10;
 	
 	private IIcon[] iconArray;
 	public QuiverBow type=this;
@@ -103,6 +106,11 @@ public class QuiverBow extends ItemBow{
 				return true;
 			}
 		}
+		if(BAR.BaublesLoaded){
+			for(ItemStack s: PlayerHandler.getPlayerBaubles(p).stackList){
+				if(s!=null &&isArrow(s))return true;
+			}
+		}
 		return false;
 	}
 	public String getArrow(EntityPlayer player){
@@ -146,6 +154,7 @@ public class QuiverBow extends ItemBow{
             return;
         }
         j = event.charge;
+        //May explain weird velocities
         
         InventorySlots arrowSlots = RepetitiveSnippets.getArrowSlot(p_77615_3_);
         int quiverIndex = -1;
@@ -167,6 +176,9 @@ public class QuiverBow extends ItemBow{
         	if(arrowStack.getItem() instanceof PotionArrow){
         		PotionArrow potarr=(PotionArrow)arrowStack.getItem();
         		tops=potarr.getSplittingArrowCount(arrowStack.getItemDamage());
+        	}
+        	else if(arrowStack.getItem()==Items.arrow){
+        		//do what war is good for
         	}
         	else{
         		ItemQuiverModArrow norarr=(ItemQuiverModArrow)arrowStack.getItem();
@@ -258,7 +270,7 @@ public class QuiverBow extends ItemBow{
             {
                 entityarrow.setFire(100);
             }
-             p_77615_1_.damageItem(1, p_77615_3_);
+            
             
             p_77615_2_.playSoundAtEntity(p_77615_3_, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
@@ -275,7 +287,6 @@ public class QuiverBow extends ItemBow{
             				System.out.println(RepetitiveSnippets.getSelectedArrowItem(p_77615_3_));
             				Quiver.removeArrow(p_77615_3_, RepetitiveSnippets.getQuivers(p_77615_3_).get(0), pot, RepetitiveSnippets.getSelectedArrowItem(p_77615_3_));
             				break;
-            				//TODO last thing! Check what it's deleting and change if necessary
             			}
             		}
             	}*/
@@ -293,6 +304,8 @@ public class QuiverBow extends ItemBow{
             	}
             	
                 p_77615_3_.inventory.consumeInventoryItem(getArrowStackFromInv(p_77615_3_).getItem());
+                p_77615_1_.damageItem(1, p_77615_3_);
+                p_77615_3_.addExhaustion(tops);
             }
             
             if (!p_77615_2_.isRemote)
@@ -314,9 +327,36 @@ public class QuiverBow extends ItemBow{
      */
     public int getMaxItemUseDuration(ItemStack p_77626_1_)
     {
-        return (int) (72000*getPullbackMult());
+        return (int)(defaultMaxItemUse * getPullbackMult()) + notchTime ;
+    }
+    
+    private int getItemUsePenalties(ItemStack stack, EntityPlayer player)
+    {
+    	int value = notchTime;
+    	
+    	InventorySlots arrowSlot = RepetitiveSnippets.getArrowQuiverSlot(player);
+    	
+    	if (arrowSlot == null)
+    	{
+    		value += noQuiverUsePenalty;
+    	}
+    	ItemStack acc=PlayerHandler.getPlayerBaubles(player).getStackInSlot(2);
+    	if(acc!=null&&acc.getItem()==CommonProxy.acc||player.inventory.hasItem(CommonProxy.acc)) value-=accessoryBuff;
+    	
+    	value /= getPullbackMult();
+    	
+    	return value;
     }
 
+    public int getMaxItemUseDuration(int penalties)
+    {
+        return (int)((defaultMaxItemUse + penalties) * getPullbackMult());
+    }
+
+    public int getMaxItemUseDuration(ItemStack stack, EntityPlayer player)
+    {
+        return getMaxItemUseDuration(getItemUsePenalties(stack, player));
+    }
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
@@ -364,10 +404,9 @@ public class QuiverBow extends ItemBow{
         		String hi=((PotionArrow)omg).getName();
         		if(PotionArrow.isSplash(omg.getDamage(arrowStack)))sub="splash";
         		p.getEntityData().setString("BARusingArrow", sub+hi);
-        		System.out.println(sub+hi);
         		
         	}
-        	else p.getEntityData().setString("BARusingArrow", "arrow");
+
         	
         	if(arrowStack.getItem() instanceof ItemQuiverModArrow){
         		ItemQuiverModArrow h =(ItemQuiverModArrow) arrowStack.getItem();
@@ -383,11 +422,11 @@ public class QuiverBow extends ItemBow{
         		}
         		else p.getEntityData().setInteger("splitArrowCount", 1);
         	}
+        	else p.getEntityData().setString("BARusingArrow", "arrow");
         	}
-            p.setItemInUse(is, this.getMaxItemUseDuration(is));
-            if(!world.isRemote);
+        	else p.getEntityData().setString("BARusingArrow", "arrow");
+            p.setItemInUse(is, getMaxItemUseDuration(is, p));
         }
-        //TODO not synced to server
 
         return is;
     	}

@@ -1,22 +1,15 @@
 package com.Jackiecrazi.BetterArcheryReborn.entities;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.Jackiecrazi.BetterArcheryReborn.Items.ModItems;
-import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
-import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.PotionArrow;
-import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.DrillArrow;
-
-import cpw.mods.fml.common.registry.IThrowableEntity;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.monster.EntityEnderman;
@@ -29,9 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -42,14 +33,23 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
-public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEntity,IProjectile {
+import com.Jackiecrazi.BetterArcheryReborn.Items.ModItems;
+import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.DrillArrow;
+import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.ItemQuiverModArrow;
+
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.common.registry.IThrowableEntity;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEntity,IProjectile,IEntityAdditionalSpawnData {
 	public String type;
 	private int field_145791_d = -1;
     private int field_145792_e = -1;
     private int field_145789_f = -1;
     private Block field_145790_g;
     private int inData;
-    private boolean inGround;
+    boolean inGround;
     /** 1 if the player can pick up the arrow */
     public int canBePickedUp;
     /** Seems to be some sort of timer for animating an arrow. */
@@ -78,6 +78,10 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
     public EntityQuiverModArrowNew setType(String h) {
 		this.type = h;
 		return this;
+	}
+    
+    public boolean isDrillBroken() {
+		return this.type=="drillarrow"&&this.usefulID < 1;
 	}
     
     public EntityQuiverModArrowNew setSpecialStuff(float f){
@@ -126,11 +130,12 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
         {
             this.canBePickedUp = 1;
         }
+        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, p_i1756_3_ * 1.5F, 1.0F);
     }
     
     public void setThrowableHeading(double p_70186_1_, double p_70186_3_, double p_70186_5_, float p_70186_7_, float p_70186_8_)
     {
-        //super.setThrowableHeading(p_70186_1_, p_70186_3_, p_70186_5_, p_70186_7_, p_70186_8_);
+        super.setThrowableHeading(p_70186_1_, p_70186_3_, p_70186_5_, p_70186_7_, p_70186_8_);
     }
 
     /**
@@ -140,7 +145,25 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
     @SideOnly(Side.CLIENT)
     public void setPositionAndRotation2(double p_70056_1_, double p_70056_3_, double p_70056_5_, float p_70056_7_, float p_70056_8_, int p_70056_9_)
     {
-        
+    	this.setPosition(p_70056_1_, p_70056_3_, p_70056_5_);
+        this.setRotation(p_70056_7_, p_70056_8_);
+    }
+    public void setVelocity(double par1, double par3, double par5)
+    {
+        this.motionX = par1;
+        this.motionY = par3;
+        this.motionZ = par5;
+
+        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F)
+        {
+            float var7 = MathHelper.sqrt_double(par1 * par1 + par5 * par5);
+            this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(par1, par5) * 180.0D / Math.PI);
+            this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(par3, (double)var7) * 180.0D / Math.PI);
+            this.prevRotationPitch = this.rotationPitch;
+            this.prevRotationYaw = this.rotationYaw;
+            this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+            this.ticksInGround = 0;
+        }
     }
     @Override
     public void writeEntityToNBT(NBTTagCompound n){
@@ -415,7 +438,7 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
                         if (movingobjectposition.entityHit instanceof EntityLivingBase)
                         {
                             EntityLivingBase entitylivingbase = (EntityLivingBase)movingobjectposition.entityHit;
-
+                            entitylivingbase.hurtResistantTime=0;
                             if (!this.worldObj.isRemote)
                             {
                                 entitylivingbase.setArrowCountInEntity(entitylivingbase.getArrowCountInEntity() + 1);
@@ -435,6 +458,7 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
                             {
                                 EnchantmentHelper.func_151384_a(entitylivingbase, this.shootingEntity);
                                 EnchantmentHelper.func_151385_b((EntityLivingBase)this.shootingEntity, entitylivingbase);
+                                
                                 if(type!=null){
                                 performEffectEntity(type, movingobjectposition.entityHit, shootingEntity);
                             }
@@ -820,5 +844,18 @@ public class EntityQuiverModArrowNew extends EntityArrow implements IThrowableEn
 
 	public void setThrower(Entity entity) {
 		this.shootingEntity=entity;
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+		buffer.writeInt(shootingEntity != null ? shootingEntity.getEntityId() : -1);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf buffer) {
+		Entity shooter = worldObj.getEntityByID(buffer.readInt());
+		if (shooter instanceof EntityLivingBase) {
+			shootingEntity = (EntityLivingBase) shooter;
+		}
 	}
 }

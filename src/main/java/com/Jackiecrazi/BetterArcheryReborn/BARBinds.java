@@ -20,9 +20,11 @@ public class BARBinds {
 	public static final KeyBinding switchArrowBackwards =
 			new KeyBinding("key.BAR.switchArrowBackwards", Keyboard.KEY_MINUS, "key.categories.gameplay");
 	public static final KeyBinding switchQuiverMount =
-			new KeyBinding("key.BAR.switchQuiverMount", Keyboard.KEY_BACK, "key.categories.gameplay");
+			new KeyBinding("key.BAR.switchQuiverMount", Keyboard.KEY_BACKSLASH, "key.categories.gameplay");
+	public static final KeyBinding openAQuiver=
+			new KeyBinding("key.BAR.openAQuiver", Keyboard.KEY_BACK, "key.categories.gameplay");
 	
-	private static final KeyBinding[] bindings = new KeyBinding[]{ switchArrowForward, switchArrowBackwards,switchQuiverMount };
+	private static final KeyBinding[] bindings = new KeyBinding[]{ switchArrowForward, switchArrowBackwards,switchQuiverMount, openAQuiver };
 	
 	public BARBinds() {
 		MinecraftForge.EVENT_BUS.register(this);
@@ -31,6 +33,7 @@ public class BARBinds {
 		ClientRegistry.registerKeyBinding(switchArrowForward);
 		ClientRegistry.registerKeyBinding(switchArrowBackwards);
 		ClientRegistry.registerKeyBinding(switchQuiverMount);
+		ClientRegistry.registerKeyBinding(openAQuiver);
 	}
 	@SubscribeEvent
 	public void pressKey(KeyInputEvent e){
@@ -64,6 +67,9 @@ public class BARBinds {
 			}
 			BAR.net.sendToServer(new SecondMessage(newValue));
 			RepetitiveSnippets.setWornQuiverType(Minecraft.getMinecraft().thePlayer, newValue);
+		}
+		if(openAQuiver.isPressed()){
+			Minecraft.getMinecraft().thePlayer.openGui(BAR.inst, 0, Minecraft.getMinecraft().theWorld, 0, 0, 0);
 		}
 	}
 }

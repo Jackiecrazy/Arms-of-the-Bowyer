@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 
 import com.Jackiecrazi.BetterArcheryReborn.Items.*;
 import com.Jackiecrazi.BetterArcheryReborn.Items.arrows.DrillArrow;
@@ -33,7 +34,7 @@ public class ModCrafting {
 			'f',new ItemStack(ModItems.misc,1,0)
 		});
 		//GameRegistry.addShapelessRecipe(new ItemStack(ModItems.Recurve,1,OreDictionary.WILDCARD_VALUE),new Object[]{new ItemStack(Items.bow,1,OreDictionary.WILDCARD_VALUE)});
-		GameRegistry.addRecipe(new ItemStack(ModItems.Yumi,1,OreDictionary.WILDCARD_VALUE), "abb", "acb", "ab ", 'b', Items.reeds, 'a', Items.string, 'c', Items.leather);
+		GameRegistry.addRecipe(new ItemStack(ModItems.Yumi), "abb", "acb", "ab ", 'b', Items.reeds, 'a', Items.string, 'c', Items.leather);
 		GameRegistry.addRecipe(new ItemStack(ModItems.FireArrow), "h","i",'h',new ItemStack(Items.coal,1,0),'i',new ItemStack(Items.arrow));
 		GameRegistry.addRecipe(new ItemStack(ModItems.FireArrow), "h","i",'h',new ItemStack(Items.coal,1,1),'i',new ItemStack(Items.arrow));
 		GameRegistry.addRecipe(new ItemStack(ModItems.FireArrow,2), "h  ","ii ",'h',new ItemStack(Items.blaze_powder),'i',new ItemStack(Items.arrow));
@@ -51,8 +52,8 @@ public class ModCrafting {
 				't', Blocks.redstone_torch,
 				'a', Items.arrow);
 		GameRegistry.addRecipe(new ItemStack(ModItems.DrillArrow,1),"h","i",'h',new ItemStack(Items.flint),'i',new ItemStack(ModItems.DrillArrow,1,((DrillArrow)ModItems.DrillArrow).setBroken(0,true)));
-		recipes.add(new RecipesSplittingArrow());
-		recipes.add(new PotArrowRecipe());
+		GameRegistry.addRecipe(new RecipesSplittingArrow());
+		GameRegistry.addRecipe(new PotArrowRecipe());
 		GameRegistry.addShapedRecipe(new ItemStack(ModItems.onemisc,1,0),
 				"f",
 				"b",
@@ -61,6 +62,6 @@ public class ModCrafting {
         FurnaceRecipes.smelting().func_151394_a(new ItemStack(ModItems.onemisc,1,0), new ItemStack(ModItems.onemisc,1,1), 0.2F);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.misc,1,0), new Object[]{new ItemStack(Items.rotten_flesh)});
 		recipes.add(new RecipesLongbow());
-		recipes.add(new RecipesRecurveBow());
+		GameRegistry.addRecipe(new RecipesRecurveBow());
 	}
 }
